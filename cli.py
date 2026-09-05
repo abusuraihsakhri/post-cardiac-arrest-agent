@@ -80,22 +80,44 @@ def main(argv=None):
         return 0
 
     if args.command == "batch":
-        with open(args.input, mode="r", encoding="utf-8-sig") as f:
-            reader = csv.DictReader(f)
-            fieldnames = list(reader.fieldnames or [])
-            rows = list(reader)
+        import os
+        # Validate input file exists
+        if not os.path.isfile(args.input):
+            print(f"Error: Input file '{args.input}' not found.", file=sys.stderr)
+            return 1
+
+        # Prevent path traversal in output path
+        out_dir = os.path.dirname(os.path.abspath(args.output))
+        if not os.path.isdir(out_dir):
+            print(f"Error: Output directory '{out_dir}' does not exist.", file=sys.stderr)
+            return 1
+
+        try:
+            with open(args.input, mode="r", encoding="utf-8-sig") as f:
+                reader = csv.DictReader(f)
+                fieldnames = list(reader.fieldnames or [])
+                rows = list(reader)
+        except (csv.Error, UnicodeDecodeError) as e:
+            print(f"Error reading CSV: {e}", file=sys.stderr)
+            return 1
 
         out_fields = fieldnames + ["overall_urgency", "integrity_status", "total_alerts", "audit_hash"]
         out_rows = []
-        for r in rows:
-            payload = SystemTaskPayload(
-                task_id=r.get("task_id", "TASK-01"),
-                target_identifier=r.get("target_identifier", "TARGET-01"),
-                primary_metric=float(r.get("primary_metric", 15.0)),
-                secondary_metric=float(r.get("secondary_metric", 5.0)),
-                status_descriptor=r.get("status_descriptor", "NOMINAL"),
-                is_critical_flag=bool(r.get("is_critical_flag", False)),
-            )
+        errors = 0
+        for idx, r in enumerate(rows):
+            try:
+                payload = SystemTaskPayload(
+                    task_id=r.get("task_id", f"TASK-{idx+1:04d}"),
+                    target_identifier=r.get("target_identifier", f"TARGET-{idx+1:04d}"),
+                    primary_metric=float(r.get("primary_metric", 15.0)),
+                    secondary_metric=float(r.get("secondary_metric", 5.0)),
+                    status_descriptor=r.get("status_descriptor", "NOMINAL"),
+                    is_critical_flag=str(r.get("is_critical_flag", "")).lower() in ("true", "1", "yes"),
+                )
+            except (ValueError, TypeError) as e:
+                print(f"Warning: Skipping row {idx+1} — invalid metric value: {e}", file=sys.stderr)
+                errors += 1
+                continue
             dossier = supervisor.process_task(payload)
             row_dict = dict(r)
             row_dict["overall_urgency"] = dossier.overall_urgency.value
@@ -108,7 +130,7 @@ def main(argv=None):
             writer = csv.DictWriter(f, fieldnames=out_fields)
             writer.writeheader()
             writer.writerows(out_rows)
-        print(f"Processed {len(out_rows)} records -> {args.output}")
+        print(f"Processed {len(out_rows)} records -> {args.output} ({errors} skipped)")
         return 0
 
     if args.command == "serve":

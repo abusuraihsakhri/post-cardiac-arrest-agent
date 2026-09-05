@@ -17,7 +17,10 @@ import uuid
 from typing import Dict, Any, List, Optional
 
 
-class Severity(str):
+from enum import Enum
+
+
+class Severity(str, Enum):
     INFO = "INFO"
     ADVISORY = "ADVISORY"
     WARNING = "WARNING"
@@ -266,10 +269,26 @@ def main(argv=None):
         return 0
 
     if args.command == "batch":
-        with open(args.input, mode="r", encoding="utf-8-sig") as f:
-            reader = csv.DictReader(f)
-            fieldnames = list(reader.fieldnames or [])
-            rows = list(reader)
+        import os
+        # Validate input file exists
+        if not os.path.isfile(args.input):
+            print(f"Error: Input file '{args.input}' not found.", file=sys.stderr)
+            return 1
+
+        # Prevent path traversal in output path
+        out_dir = os.path.dirname(os.path.abspath(args.output))
+        if not os.path.isdir(out_dir):
+            print(f"Error: Output directory '{out_dir}' does not exist.", file=sys.stderr)
+            return 1
+
+        try:
+            with open(args.input, mode="r", encoding="utf-8-sig") as f:
+                reader = csv.DictReader(f)
+                fieldnames = list(reader.fieldnames or [])
+                rows = list(reader)
+        except (csv.Error, UnicodeDecodeError) as e:
+            print(f"Error reading CSV: {e}", file=sys.stderr)
+            return 1
 
         out_fields = fieldnames + ["overall_status", "total_alerts", "critical_count", "consensus_summary"]
         out_rows = []

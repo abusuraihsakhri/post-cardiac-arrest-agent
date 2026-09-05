@@ -72,11 +72,12 @@ python cli.py --task-id <value> --target <value> --primary <value> --secondary <
 
 ## 🛡️ Security & Enterprise Architecture
 
-* **Zero-PHI Outbound Interceptor:** Active AST and regex inspection blocking SSNs, MRNs, phone numbers, and patient identifiers.
-* **Tamper-Evident HMAC-SHA256 Audit Trail:** Chained, cryptographically signed logs for every evaluation and state transition.
+* **Zero-PHI Outbound Interceptor:** Active regex inspection blocking SSNs, MRNs, phone numbers, emails, DOBs, and patient names. Raises `SecurityException` on violations.
+* **Tamper-Evident HMAC-SHA256 Audit Trail:** Chained, cryptographically signed logs for every evaluation and state transition. Requires `AUDIT_SECRET_KEY` environment variable for production deployments; generates an ephemeral key with a runtime warning if unset.
 * **Air-Gapped LLM Reasoning Adapter:** Agnostic integration for local Ollama instances (`llama3`, `mistral`), Claude 3.5 Sonnet, GPT-4o, and deterministic test mocks.
 * **Active Learning Bayesian Calibration:** Dynamic tracker updating worker reliability weights and monitoring Brier calibration drift.
-* **FastAPI & Prometheus Telemetry:** Exposes OpenAPI 3.1 REST endpoints and operational Prometheus metrics (`/metrics`).
+* **FastAPI & Prometheus Telemetry:** Exposes REST endpoints and operational Prometheus-style metrics (`/metrics`).
+* **Batch CLI Hardening:** Input validation, path traversal protection, and graceful error handling for malformed CSV records.
 
 ---
 
@@ -88,10 +89,16 @@ Run the automated test suite:
 pytest -v
 ```
 
+Run with coverage:
+
+```bash
+pytest -v --tb=short
+```
+
 Execute high-throughput batch simulation benchmarks:
 
 ```bash
-python simulator.py --tasks 1000 --concurrency 8
+python simulator.py 1000
 ```
 
 ---
@@ -100,5 +107,38 @@ python simulator.py --tasks 1000 --concurrency 8
 
 ```bash
 docker build -t post-cardiac-arrest-agent .
-docker run -p 8000:8000 post-cardiac-arrest-agent
+docker run -p 8000:8000 -e AUDIT_SECRET_KEY=your-secret-key post-cardiac-arrest-agent
+```
+
+---
+
+## 🔧 Configuration
+
+| Environment Variable | Purpose | Default |
+|:---|:---|:---|
+| `AUDIT_SECRET_KEY` | HMAC signing key for audit trail integrity | Random ephemeral key (warns at startup) |
+
+---
+
+## 📁 Project Structure
+
+```
+post-cardiac-arrest-agent/
+├── agents/                  # Core agent modules
+│   ├── api.py              # FastAPI REST server
+│   ├── base.py             # Security, PHI guard, audit trail
+│   ├── models.py           # Pydantic schemas
+│   ├── supervisor.py       # Master orchestrator
+│   ├── workers.py          # Specialized domain workers
+│   ├── llm_factory.py      # LLM client factory
+│   ├── learning.py         # Bayesian calibration engine
+│   ├── metrics.py          # Prometheus metrics collector
+│   └── streamer.py         # WebSocket telemetry broadcaster
+├── tests/                   # Test suite
+├── cli.py                   # CLI entry point
+├── post_arrest_sentinel.py  # PostArrest Sentinel agent
+├── enrichment.py            # Feature enrichment engines
+├── simulator.py             # Load testing simulator
+├── web/                     # Static web assets
+└── pyproject.toml           # Project metadata
 ```
