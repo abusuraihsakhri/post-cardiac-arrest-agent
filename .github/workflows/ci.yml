@@ -24,7 +24,13 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install fastapi uvicorn pydantic pytest
+        pip install -e ".[server,test]"
+
+    - name: Compile Python sources
+      run: python -m compileall -q agents post_cardiac_arrest_agent cli.py post_arrest_sentinel.py enrichment.py
+
+    - name: Check browser checklist
+      run: node --check web/audit.mjs && node --test tests/web_audit.test.mjs
 
     - name: Run Pytest Suite
       run: |
