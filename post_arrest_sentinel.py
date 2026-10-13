@@ -43,7 +43,7 @@ class DomainKnowledgeRegistry:
         warnings = []
         for key in payload.keys():
             if any(phi_keyword in key.lower() for phi_keyword in ["patient_name", "ssn", "mrn_raw", "dob_raw"]):
-                warnings.append(f"PHI_DEFENSE_TRIGGERED: Direct identifier '{key}' masked to synthetic token.")
+                warnings.append(f"PHI_DEFENSE_TRIGGERED: Direct identifier '{key}' detected; no automatic masking is performed.")
         return warnings
 
 class AgentAlert:
@@ -91,7 +91,7 @@ class EEGPatternAnalyzerAgent:
     """Specialized Sub-Agent 2 for post-cardiac-arrest-agent"""
     def evaluate(self, payload: Dict[str, Any]) -> List[AgentAlert]:
         alerts = []
-        is_critical = bool(payload.get("critical_flag", False))
+        is_critical = str(payload.get("critical_flag", False)).strip().lower() in ("true", "1", "yes")
         val2 = float(payload.get("metric_secondary", 5.0))
         if is_critical or val2 > 12.0:
             alerts.append(
