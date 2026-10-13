@@ -53,6 +53,6 @@ import {evaluatePostArrest} from "./audit.mjs";
     anchor.href = url;
     anchor.download = "post-arrest-observation-checklist.json";
     anchor.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   });
 
