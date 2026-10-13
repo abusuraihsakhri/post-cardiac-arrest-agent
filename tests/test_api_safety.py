@@ -47,4 +47,4 @@ def test_audit_log_endpoint_exposes_no_unauthenticated_records():
 
 def test_unimplemented_inference_provider_fails_closed():
     with pytest.raises(ValueError, match="not implemented"):
-        LLMFactory.create("openai")
+        LLMFactory.create("unsupported")
