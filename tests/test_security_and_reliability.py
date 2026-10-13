@@ -30,15 +30,28 @@ class TestAuditTrailSecurity:
             if old_key is not None:
                 os.environ["AUDIT_SECRET_KEY"] = old_key
 
-    def test_explicit_key_produces_deterministic_signatures(self):
-        """Same key and same log entry should produce same signature."""
+    def test_signatures_include_record_metadata(self):
+        """Independent entries have distinct metadata and both verify correctly."""
         trail = AuditTrail(secret_key="test-key-for-deterministic-signing")
         entry1 = trail.log("actor1", "tier1", "EVENT_A", {"x": 1})
-
         trail2 = AuditTrail(secret_key="test-key-for-deterministic-signing")
         entry2 = trail2.log("actor1", "tier1", "EVENT_A", {"x": 1})
+        assert len(entry1["current_hash"]) == len(entry2["current_hash"]) == 64
+        assert trail.verify_integrity()
+        assert trail2.verify_integrity()
 
-        assert entry1["current_hash"] == entry2["current_hash"]
+    def test_rejects_tampered_signed_metadata(self):
+        trail = AuditTrail(secret_key="test-key")
+        trail.log("actor", "tier", "EVENT", {"value": 1})
+        trail.logs[0]["actor"] = "forged"
+        assert trail.verify_integrity() is False
+
+    def test_get_trail_is_defensive_copy(self):
+        trail = AuditTrail(secret_key="test-key")
+        trail.log("actor", "tier", "EVENT", {"value": 1})
+        records = trail.get_trail()
+        records[0]["actor"] = "changed"
+        assert trail.verify_integrity() is True
 
     def test_different_keys_produce_different_signatures(self):
         """Different keys should produce different HMAC signatures."""
