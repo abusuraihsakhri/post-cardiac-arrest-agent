@@ -16,7 +16,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Medical Science Apps",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = []
 
 [project.optional-dependencies]
