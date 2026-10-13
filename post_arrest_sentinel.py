@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 PostArrest Sentinel: Targeted Temperature Management & Neuro-Prognostication Agent
-Audits post-ROSC TTM temperature adherence (33-36C), shivering protocols, and multimodal 72h neuro-prognostication (NSE, SSEP N20, pupillometry).
+Legacy synthetic numerical-rule demonstration; does not implement post-ROSC temperature or neuroprognostication guidelines.
 
 Domain: Critical Care
 Author: Dr. Abu Suraih Sakhri
@@ -35,15 +35,15 @@ class Severity(str, Enum):
 class DomainKnowledgeRegistry:
     """Enterprise domain rules, guideline matrices, and evidence benchmarks."""
     SYSTEM_VERSION = "2.0.0-PRO-CLINICAL"
-    ZERO_PHI_COMPLIANCE = True
-    HIPAA_SAFE_HARBOR = "ACTIVE_ON_PREMISES"
+    ZERO_PHI_COMPLIANCE = False
+    HIPAA_SAFE_HARBOR = "NOT_ASSESSED"
 
     @staticmethod
     def audit_security_and_integrity(payload: Dict[str, Any]) -> List[str]:
         warnings = []
         for key in payload.keys():
             if any(phi_keyword in key.lower() for phi_keyword in ["patient_name", "ssn", "mrn_raw", "dob_raw"]):
-                warnings.append(f"PHI_DEFENSE_TRIGGERED: Direct identifier '{key}' masked to synthetic token.")
+                warnings.append(f"PHI_DEFENSE_TRIGGERED: Direct identifier '{key}' detected; no automatic masking is performed.")
         return warnings
 
 class AgentAlert:
@@ -81,7 +81,7 @@ class TTMProtocolAuditorAgent:
                     severity=Severity.WARNING,
                     title="Primary Metric Threshold Discrepancy",
                     details=f"Primary metric value ({val1:.1f}) exceeded standard clinical baseline.",
-                    recommendation="Perform secondary cross-check and review calibration profile.",
+                    recommendation="Review illustrative values; this is not a clinical measurement limit.",
                 )
             )
         return alerts
@@ -91,7 +91,7 @@ class EEGPatternAnalyzerAgent:
     """Specialized Sub-Agent 2 for post-cardiac-arrest-agent"""
     def evaluate(self, payload: Dict[str, Any]) -> List[AgentAlert]:
         alerts = []
-        is_critical = bool(payload.get("critical_flag", False))
+        is_critical = str(payload.get("critical_flag", False)).strip().lower() in ("true", "1", "yes")
         val2 = float(payload.get("metric_secondary", 5.0))
         if is_critical or val2 > 12.0:
             alerts.append(
@@ -101,7 +101,7 @@ class EEGPatternAnalyzerAgent:
                     severity=Severity.CRITICAL,
                     title="Urgent Consensus Protocol Trigger",
                     details=f"Secondary parameter index ({val2:.1f}) triggered automated supervisory escalation.",
-                    recommendation="Initiate mandatory closed-loop clinical notification protocol.",
+                    recommendation="Demo flag only. This program does not notify clinicians.",
                 )
             )
         return alerts
@@ -120,7 +120,7 @@ class MultimodalNeuroScorerAgent:
                     severity=Severity.ADVISORY,
                     title="Biomarker / Feature Discordance Flag",
                     details=f"Phenotypic discordance noted in observation status ({status_text}).",
-                    recommendation="Reconcile correlative findings with secondary confirmatory testing.",
+                    recommendation="Review the illustrative status descriptor; no diagnostic inference is supported.",
                 )
             )
         return alerts
@@ -145,7 +145,7 @@ class PostArrestCoordinator:
         critical_count = sum(1 for a in all_alerts if a.severity == Severity.CRITICAL)
         warning_count = sum(1 for a in all_alerts if a.severity == Severity.WARNING)
 
-        overall_status = "CRITICAL_ACTION_REQUIRED" if critical_count > 0 else ("WARNING_ACTIVE" if warning_count > 0 else "CONCORDANT_NORMAL")
+        overall_status = "CRITICAL_ACTION_REQUIRED" if critical_count > 0 else ("WARNING_ACTIVE" if warning_count > 0 else ("ADVISORY_ACTIVE" if all_alerts else "CONCORDANT_NORMAL"))
 
         dossier = {
             "system": "post-cardiac-arrest-agent",
@@ -168,9 +168,9 @@ class PostArrestCoordinator:
         if "summary" in q or "status" in q:
             return f"PostArrest Sentinel: Targeted Temperature Management & Neuro-Prognostication Agent currently tracking {len(self.case_registry)} cases in local air-gapped memory."
         elif "guidelines" in q or "protocol" in q:
-            return "All sub-agents operate under validated consensus clinical algorithms and CAP/CLSI/NCCN/WHO standards."
+            return "Legacy numerical rules are synthetic examples, not validated clinical algorithms."
         else:
-            return f"PostArrest Sentinel: Targeted Temperature Management & Neuro-Prognostication Agent executive agent online. Continuous supervisory monitoring active across all domain parameters."
+            return f"PostArrest Sentinel: Targeted Temperature Management & Neuro-Prognostication Agent executive agent online. Synthetic demonstration only; no continuous clinical monitoring occurs."
 
 
 coordinator = PostArrestCoordinator()
@@ -252,7 +252,7 @@ def main(argv=None):
         }
         dossier = coordinator.audit_case(payload)
         print("=" * 80)
-        print(f"  POSTARREST SENTINEL: TARGETED TEMPERATURE MANAGEMENT & NEURO-PROGNOSTICATION AGENT")
+        print("  LEGACY SYNTHETIC RULE DEMONSTRATION - NOT FOR CLINICAL DECISIONS")
         print(f"  Case: {dossier['case_id']} | Status: [{dossier['overall_status']}] | Alerts: {dossier['total_alerts']}")
         print("=" * 80)
         for a in dossier["alerts"]:

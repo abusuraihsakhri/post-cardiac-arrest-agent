@@ -23,7 +23,7 @@ def test_coordinator():
     assert dossier["total_alerts"] == 0
 
     ans = coord.query_assistant("What are the guidelines?")
-    assert "guidelines" in ans or "standards" in ans
+    assert "synthetic" in ans.lower()
 
 
 def test_cli():
@@ -33,5 +33,5 @@ def test_cli():
 
 def test_domain_registry():
     from post_arrest_sentinel import DomainKnowledgeRegistry
-    assert DomainKnowledgeRegistry.ZERO_PHI_COMPLIANCE is True
+    assert DomainKnowledgeRegistry.ZERO_PHI_COMPLIANCE is False
     assert "PRO" in DomainKnowledgeRegistry.SYSTEM_VERSION

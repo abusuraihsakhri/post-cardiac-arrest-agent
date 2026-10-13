@@ -1,7 +1,7 @@
 """
 Clinical Data Models & Enums for PostArrest Sentinel: Targeted Temperature Management & Neuro-Prognostication Agent.
 Domain: Critical Care
-Standard: Surviving Sepsis Campaign 2021 & Sepsis-3
+Standard: Synthetic numerical example; no clinical guideline supported
 """
 import datetime
 from dataclasses import dataclass, field
@@ -43,7 +43,7 @@ class AgentAlert:
     title: str
     clinical_finding: str
     actionable_recommendation: str
-    guideline_citation: str = "Surviving Sepsis Campaign 2021 & Sepsis-3"
+    guideline_citation: str = "Synthetic numerical example; no clinical guideline supported"
     timestamp: str = field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat())
 
     def to_dict(self) -> Dict[str, Any]:

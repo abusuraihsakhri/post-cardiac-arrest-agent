@@ -1,144 +1,67 @@
 # Post Cardiac Arrest Agent
 
-> **Domain:** Clinical Decision Support & Biomedical Computing  
-> **Reference Guidelines & Standards:** `Standard Clinical Formulations & ISO/IEC Quality Frameworks`
+A browser-based **adult post–return-of-spontaneous-circulation (ROSC) observation checklist**, alongside legacy Python synthetic-rule demonstration modules.
 
-<div align="center">
+**Use for education and software testing only.** The application is not validated clinical decision support. It does not diagnose disease, prescribe treatment, interpret EEG or biomarkers, forecast neurologic outcome, or communicate with clinical systems.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-3776AB.svg?logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688.svg?logo=fastapi&logoColor=white)
-![Audit Trail](https://img.shields.io/badge/Audit-HMAC--SHA256_Tamper--Evident-brightgreen.svg)
-![Zero-PHI Guard](https://img.shields.io/badge/Guard-Zero--PHI_Outbound-blue.svg)
-![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker&logoColor=white)
+## Browser checklist
 
-</div>
-
----
-
-## 📖 What It Does
-
-**Post Cardiac Arrest Agent** is an advanced analytical and computational platform implementing Targeted Temperature Management (TTM) & Multimodal Neuro-Prognostication.
-
----
-
-## ⚙️ Key Capabilities & Algorithmic Modules
-
-### 🔬 Core Algorithmic & Evaluation Engines
-
-- **`Severity`** — dedicated module for severity evaluation and state verification.
-- **`DomainKnowledgeRegistry`**: Enterprise domain rules, guideline matrices, and evidence benchmarks.
-- **`AgentAlert`** — dedicated module for agent alert evaluation and state verification.
-- **`TTMProtocolAuditorAgent`**: Specialized Sub-Agent 1 for post-cardiac-arrest-agent
-- **`EEGPatternAnalyzerAgent`**: Specialized Sub-Agent 2 for post-cardiac-arrest-agent
-- **`MultimodalNeuroScorerAgent`**: Specialized Sub-Agent 3 for post-cardiac-arrest-agent
-
----
-
-## 💻 CLI Quickstart & Usage
-
-### 1. Guided Interactive Mode
-```bash
-python cli.py
-```
-
-### 2. Direct Parameterized Evaluation
-```bash
-python cli.py --task-id <value> --target <value> --primary <value> --secondary <value>
-```
-
-### Parameter Reference
-- `--task-id`: Specifies input measurement or parameter value.
-- `--target`: Specifies input measurement or parameter value.
-- `--primary`: Specifies input measurement or parameter value.
-- `--secondary`: Specifies input measurement or parameter value.
-- `--critical`: Specifies input measurement or parameter value.
-- `--status`: Specifies input measurement or parameter value.
-- `--input`: Specifies input measurement or parameter value.
-- `--output`: Specifies input measurement or parameter value.
-
-### Input Data Schema
-
-| Field | Description | Requirement |
-|:------|:------------|:------------|
-| `case_id` | Parameter / observation metric | Required |
-| `patient_synthetic_id` | Parameter / observation metric | Required |
-| `metric_primary` | Parameter / observation metric | Required |
-| `metric_secondary` | Parameter / observation metric | Required |
-| `is_stat` | Parameter / observation metric | Required |
-| `status_flag` | Parameter / observation metric | Required |
-
----
-
-## 🛡️ Security & Enterprise Architecture
-
-* **Zero-PHI Outbound Interceptor:** Active regex inspection blocking SSNs, MRNs, phone numbers, emails, DOBs, and patient names. Raises `SecurityException` on violations.
-* **Tamper-Evident HMAC-SHA256 Audit Trail:** Chained, cryptographically signed logs for every evaluation and state transition. Requires `AUDIT_SECRET_KEY` environment variable for production deployments; generates an ephemeral key with a runtime warning if unset.
-* **Air-Gapped LLM Reasoning Adapter:** Agnostic integration for local Ollama instances (`llama3`, `mistral`), Claude 3.5 Sonnet, GPT-4o, and deterministic test mocks.
-* **Active Learning Bayesian Calibration:** Dynamic tracker updating worker reliability weights and monitoring Brier calibration drift.
-* **FastAPI & Prometheus Telemetry:** Exposes REST endpoints and operational Prometheus-style metrics (`/metrics`).
-* **Batch CLI Hardening:** Input validation, path traversal protection, and graceful error handling for malformed CSV records.
-
----
-
-## 🧪 Testing & Verification
-
-Run the automated test suite:
+The static application is in [`web/index.html`](web/index.html). For local use, run:
 
 ```bash
-pytest -v
+python -m http.server 8080 --directory web
 ```
 
-Run with coverage:
+Then visit `http://localhost:8080/`. The browser application needs no backend, accounts, API keys, Python runtime, or external JavaScript dependencies.
+
+It accepts four non-identifying observations: whether an adult is unresponsive to verbal commands after ROSC, a recorded temperature, accumulated hours of temperature control, and MAP. It flags values for review against a **limited** selection of the 2025 AHA post-cardiac-arrest recommendations:
+
+- Maintain deliberate temperature control at 32–37.5 °C for adults unresponsive to commands after ROSC.
+- Maintaining temperature control for at least 36 hours in those who remain unresponsive is reasonable.
+- Avoid hypotension after ROSC; guideline minimum MAP is 65 mm Hg.
+- Neurologic prognostication is delayed and multimodal. Sedative, temperature, and other confounders must be considered.
+
+**Source:** [2025 AHA Guidelines, Part 11: Post-Cardiac Arrest Care](https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/post-cardiac-arrest-care).
+
+The checklist reviews observations, not overall care quality. A result with no flagged values is **not** clearance, prognosis, or evidence of safety. It exports a local JSON summary, containing no identifier field.
+
+## Privacy and limitations
+
+The static page computes locally; it does not send inputs to a server, use browser storage, or embed remote analytics. **Do not submit real patient information.**
+
+The remaining Python routes are **legacy synthetic demonstrations**, not implementations of the post-ROSC guidelines above. Their generic metrics, fixed thresholds, alert labels, and enrichment engines are not clinically validated. Existing command/API shapes are retained for compatibility with supplied test fixtures. Other modules (`post_arrest_sentinel.py`, `post_cardiac_arrest_agent/`, `agents/`) expose distinct legacy interfaces.
+
+The optional Python service keeps task/audit metadata in process memory. Its pattern-based identifier check does **not** guarantee de-identification, HIPAA Safe Harbor compliance, or suitability for PHI. The audit HMAC verifies record integrity while the process/key is available; it is not a durable compliance archive. The `mock` inference adapter is not a real clinical or language-model reasoning system; other providers are not implemented.
+
+## Python development and tests
+
+Python 3.10–3.12 and Node.js (for browser-rule tests) are used in CI.
 
 ```bash
-pytest -v --tb=short
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -e ".[server,test]"
+pytest -q
+node --test tests/web_audit.test.mjs
+python cli.py audit --task-id TASK-DEMO-01 --primary 20 --secondary 5
+python cli.py serve
 ```
 
-Execute high-throughput batch simulation benchmarks:
+The Python API is available locally at `http://127.0.0.1:8000/health`; it is **not** required by the static browser checklist. The PyPI-style console entry point is `post-cardiac-arrest-engine`.
 
-```bash
-python simulator.py 1000
-```
+For a Docker demonstration, set an independently generated high-entropy `AUDIT_SECRET_KEY` in your environment, then run `docker compose up --build`. Compose binds the API to loopback by default. Do not commit secrets to source control.
 
----
+## Architecture
 
-## 🐳 Container Deployment
+- `web/` — dependency-free browser checklist, observation rules, and JSON export
+- `agents/` and `cli.py` — legacy synthetic orchestration, FastAPI interface, and in-memory HMAC audit
+- `post_cardiac_arrest_agent/`, `post_arrest_sentinel.py` — additional legacy CLI/API numerical examples
+- `enrichment.py` — synthetic placeholder threshold modules; not clinical models
+- `tests/` — Python and browser regression checks
+- `.github/workflows/` — test matrix and static Pages publishing workflow
 
-```bash
-docker build -t post-cardiac-arrest-agent .
-docker run -p 8000:8000 -e AUDIT_SECRET_KEY=your-secret-key post-cardiac-arrest-agent
-```
+Modern browsers with ES modules are supported; the browser workflow uses no WebAssembly, Pyodide, or server-side Python.
 
----
+## License
 
-## 🔧 Configuration
-
-| Environment Variable | Purpose | Default |
-|:---|:---|:---|
-| `AUDIT_SECRET_KEY` | HMAC signing key for audit trail integrity | Random ephemeral key (warns at startup) |
-
----
-
-## 📁 Project Structure
-
-```
-post-cardiac-arrest-agent/
-├── agents/                  # Core agent modules
-│   ├── api.py              # FastAPI REST server
-│   ├── base.py             # Security, PHI guard, audit trail
-│   ├── models.py           # Pydantic schemas
-│   ├── supervisor.py       # Master orchestrator
-│   ├── workers.py          # Specialized domain workers
-│   ├── llm_factory.py      # LLM client factory
-│   ├── learning.py         # Bayesian calibration engine
-│   ├── metrics.py          # Prometheus metrics collector
-│   └── streamer.py         # WebSocket telemetry broadcaster
-├── tests/                   # Test suite
-├── cli.py                   # CLI entry point
-├── post_arrest_sentinel.py  # PostArrest Sentinel agent
-├── enrichment.py            # Feature enrichment engines
-├── simulator.py             # Load testing simulator
-├── web/                     # Static web assets
-└── pyproject.toml           # Project metadata
-```
+[MIT](LICENSE).

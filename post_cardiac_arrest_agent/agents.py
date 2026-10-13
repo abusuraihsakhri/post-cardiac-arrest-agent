@@ -93,7 +93,7 @@ class PostArrestCoordinator:
             "stat_critical_alerts": stat_count,
             "warning_alerts": warn_count,
             "alerts": [a.to_dict() for a in all_alerts],
-            "guideline_standard": "Surviving Sepsis Campaign 2021 & Sepsis-3",
+            "guideline_standard": "Synthetic demonstration; not validated for clinical use",
             "consensus_summary": f"Multi-agent supervision completed across 3 sub-agents with status [{status.value}].",
         }
 
@@ -105,6 +105,6 @@ class PostArrestCoordinator:
         if "status" in q or "summary" in q:
             return f"PostArrest Sentinel: Targeted Temperature Management & Neuro-Prognostication Agent currently tracking {len(self.case_registry)} cases in on-premises memory."
         elif "guideline" in q or "standard" in q:
-            return "Active clinical surveillance operates under Surviving Sepsis Campaign 2021 & Sepsis-3 validated protocols."
+            return "Legacy numerical thresholds are synthetic demonstrations and are not clinical guidance."
         else:
-            return f"PostArrest Sentinel: Targeted Temperature Management & Neuro-Prognostication Agent executive agent online. Zero-PHI air-gapped monitoring active."
+            return f"PostArrest Sentinel: Targeted Temperature Management & Neuro-Prognostication Agent executive agent online. This demonstration has no automatic clinical monitoring."

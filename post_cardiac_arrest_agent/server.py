@@ -14,7 +14,7 @@ def create_app():
 
         app = FastAPI(
             title="PostArrest Sentinel: Targeted Temperature Management & Neuro-Prognostication Agent",
-            description="Audits post-ROSC TTM temperature adherence (33-36C), shivering protocols, and multimodal 72h neuro-prognostication (NSE, SSEP N20, pupillometry).",
+            description="Exposes legacy synthetic numerical rules for testing; not for clinical decision support.",
             version="2.0.0-PRO",
         )
 

@@ -51,7 +51,7 @@ def main(argv=None):
         dossier = coordinator.process_case(case)
         print("=" * 80)
         print(f"  POSTARREST SENTINEL: TARGETED TEMPERATURE MANAGEMENT & NEURO-PROGNOSTICATION AGENT")
-        print(f"  Domain: Critical Care | Standard: Surviving Sepsis Campaign 2021 & Sepsis-3")
+        print("  Synthetic numerical demonstration - no clinical guideline supported")
         print(f"  Case: {dossier['case_id']} | Status: [{dossier['overall_status']}] | Total Alerts: {dossier['total_alerts']}")
         print("=" * 80)
         for a in dossier["alerts"]:
@@ -82,7 +82,7 @@ def main(argv=None):
                 primary_metric=float(r.get("metric_primary", r.get("primary_metric", 15.0))),
                 secondary_metric=float(r.get("metric_secondary", r.get("secondary_metric", 5.0))),
                 status_flag=r.get("status_flag", r.get("status_text", "NORMAL")),
-                is_stat=bool(r.get("is_stat", r.get("critical_flag", False))),
+                is_stat=str(r.get("is_stat", r.get("critical_flag", False))).strip().lower() in ("true", "1", "yes"),
             )
             dossier = coordinator.process_case(case)
             row_dict = dict(r)
