@@ -22,10 +22,10 @@ class SystemIntegrityStatus(str, Enum):
 
 
 class SystemTaskPayload(BaseModel):
-    task_id: str = Field(..., description="Unique task / case identifier")
-    target_identifier: str = Field(..., description="Entity, patient key, or genomic/cryptographic target")
-    primary_metric: float = Field(..., description="Primary domain measurement or score")
-    secondary_metric: float = Field(default=0.0, description="Secondary kinetic or confidence score")
+    task_id: str = Field(..., min_length=1, max_length=128, description="Synthetic task identifier; no PHI")
+    target_identifier: str = Field(..., min_length=1, max_length=128, description="Synthetic identifier; no PHI")
+    primary_metric: float = Field(..., allow_inf_nan=False, description="Illustrative metric, not a clinical score")
+    secondary_metric: float = Field(default=0.0, allow_inf_nan=False, description="Illustrative metric, not a clinical score")
     status_descriptor: str = Field(default="NOMINAL", description="Status code or phenotype descriptor")
     is_critical_flag: bool = Field(default=False, description="Emergency escalation or high priority trigger")
     attributes: Dict[str, Any] = Field(default_factory=dict, description="Metadata key-value pairs")
