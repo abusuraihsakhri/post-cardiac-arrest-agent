@@ -1,6 +1,6 @@
 """
 Enrichment Feature Implementation for post-cardiac-arrest-agent.
-Generated based on domain-specific requirements in specifications.
+Synthetic placeholder engines; no clinically validated evaluation is implemented.
 """
 from dataclasses import dataclass, field
 from typing import Dict, Any, List, Optional, Tuple
@@ -39,13 +39,13 @@ class EnrichmentIdeasImplementationPlansEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Enrichment Ideas & Implementation Plans: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Synthetic threshold exceeded; no clinical action is determined.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Enrichment Ideas & Implementation Plans: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Synthetic threshold exceeded; no monitoring recommendation is implied.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Illustrative value does not cross the configured synthetic threshold.")
 
         res = EnrichmentIdeasImplementationPlansEngineResult(
             feature_name="Enrichment Ideas & Implementation Plans",
@@ -89,13 +89,13 @@ class NeuroprognosticationEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Neuroprognostication: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Synthetic threshold exceeded; no clinical action is determined.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Neuroprognostication: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Synthetic threshold exceeded; no monitoring recommendation is implied.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Illustrative value does not cross the configured synthetic threshold.")
 
         res = NeuroprognosticationEngineResult(
             feature_name="Neuroprognostication",
@@ -139,13 +139,13 @@ class TtmEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"TTM: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Synthetic threshold exceeded; no clinical action is determined.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"TTM: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Synthetic threshold exceeded; no monitoring recommendation is implied.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Illustrative value does not cross the configured synthetic threshold.")
 
         res = TtmEngineResult(
             feature_name="TTM",
@@ -189,13 +189,13 @@ class CoronaryEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Coronary: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Synthetic threshold exceeded; no clinical action is determined.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Coronary: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Synthetic threshold exceeded; no monitoring recommendation is implied.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Illustrative value does not cross the configured synthetic threshold.")
 
         res = CoronaryEngineResult(
             feature_name="Coronary",
@@ -239,13 +239,13 @@ class EcmoEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"ECMO: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Synthetic threshold exceeded; no clinical action is determined.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"ECMO: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Synthetic threshold exceeded; no monitoring recommendation is implied.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Illustrative value does not cross the configured synthetic threshold.")
 
         res = EcmoEngineResult(
             feature_name="ECMO",
@@ -289,13 +289,13 @@ class FamilyEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Family: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Synthetic threshold exceeded; no clinical action is determined.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Family: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Synthetic threshold exceeded; no monitoring recommendation is implied.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Illustrative value does not cross the configured synthetic threshold.")
 
         res = FamilyEngineResult(
             feature_name="Family",
@@ -339,13 +339,13 @@ class QualityEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Quality: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Synthetic threshold exceeded; no clinical action is determined.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Quality: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Synthetic threshold exceeded; no monitoring recommendation is implied.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Illustrative value does not cross the configured synthetic threshold.")
 
         res = QualityEngineResult(
             feature_name="Quality",
@@ -389,13 +389,13 @@ class LongEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Long: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Synthetic threshold exceeded; no clinical action is determined.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Long: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Synthetic threshold exceeded; no monitoring recommendation is implied.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Illustrative value does not cross the configured synthetic threshold.")
 
         res = LongEngineResult(
             feature_name="Long",
