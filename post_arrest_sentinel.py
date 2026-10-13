@@ -81,7 +81,7 @@ class TTMProtocolAuditorAgent:
                     severity=Severity.WARNING,
                     title="Primary Metric Threshold Discrepancy",
                     details=f"Primary metric value ({val1:.1f}) exceeded standard clinical baseline.",
-                    recommendation="Perform secondary cross-check and review calibration profile.",
+                    recommendation="Review illustrative values; this is not a clinical measurement limit.",
                 )
             )
         return alerts
@@ -101,7 +101,7 @@ class EEGPatternAnalyzerAgent:
                     severity=Severity.CRITICAL,
                     title="Urgent Consensus Protocol Trigger",
                     details=f"Secondary parameter index ({val2:.1f}) triggered automated supervisory escalation.",
-                    recommendation="Initiate mandatory closed-loop clinical notification protocol.",
+                    recommendation="Demo flag only. This program does not notify clinicians.",
                 )
             )
         return alerts
@@ -120,7 +120,7 @@ class MultimodalNeuroScorerAgent:
                     severity=Severity.ADVISORY,
                     title="Biomarker / Feature Discordance Flag",
                     details=f"Phenotypic discordance noted in observation status ({status_text}).",
-                    recommendation="Reconcile correlative findings with secondary confirmatory testing.",
+                    recommendation="Review the illustrative status descriptor; no diagnostic inference is supported.",
                 )
             )
         return alerts
@@ -145,7 +145,7 @@ class PostArrestCoordinator:
         critical_count = sum(1 for a in all_alerts if a.severity == Severity.CRITICAL)
         warning_count = sum(1 for a in all_alerts if a.severity == Severity.WARNING)
 
-        overall_status = "CRITICAL_ACTION_REQUIRED" if critical_count > 0 else ("WARNING_ACTIVE" if warning_count > 0 else "CONCORDANT_NORMAL")
+        overall_status = "CRITICAL_ACTION_REQUIRED" if critical_count > 0 else ("WARNING_ACTIVE" if warning_count > 0 else ("ADVISORY_ACTIVE" if all_alerts else "CONCORDANT_NORMAL"))
 
         dossier = {
             "system": "post-cardiac-arrest-agent",
