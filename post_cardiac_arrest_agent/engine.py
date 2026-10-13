@@ -18,7 +18,7 @@ class ClinicalDomainEngine:
         if value > cls.PRIMARY_BASELINE_LIMIT:
             return {
                 "title": "Primary Metric Threshold Exceeded",
-                "finding": f"Observed value ({value:.2f}) exceeds Synthetic demonstration only (not a clinical guideline) clinical baseline limit ({cls.PRIMARY_BASELINE_LIMIT:.1f}).",
+                "finding": f"Observed value ({value:.2f}) exceeds Synthetic demonstration only (not a clinical guideline) synthetic demonstration threshold ({cls.PRIMARY_BASELINE_LIMIT:.1f}).",
                 "recommendation": "Review example values; this is not a validated clinical threshold.",
             }
         return None
@@ -39,7 +39,7 @@ class ClinicalDomainEngine:
         if "DISCORDANT" in status_upper or "EQUIVOCAL" in status_upper or "MUTANT" in status_upper:
             return {
                 "title": "Phenotypic / Biomarker Discordance Identified",
-                "finding": f"Status flag '{status_flag}' indicates divergence from standard diagnostic concordance.",
+                "finding": f"Status flag '{status_flag}' indicates divergence from illustrative descriptor matching.",
                 "recommendation": f"Review illustrative status flags; no testing recommendation is established.",
             }
         return None
