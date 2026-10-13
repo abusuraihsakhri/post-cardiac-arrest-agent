@@ -58,6 +58,12 @@ export function evaluatePostArrest(input) {
   }
   return {
     context: "Adult post-ROSC educational checklist; not validated clinical decision support",
+    measurements: {
+      unresponsive: input.unresponsive,
+      temperatureC: temperature,
+      temperatureHours: hours,
+      mapMmHg: map
+    },
     status: notes.some(n => n.severity === "review") ? "Observations for clinician review" : "No rule flags in submitted observations",
     observations: notes,
     source: SOURCE_URL
